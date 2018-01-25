@@ -4,7 +4,10 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"regexp"
 )
+
+const triggerTerm = "yo tango"
 
 type Listener struct {
 	welcomeMessage string
@@ -15,10 +18,21 @@ type Listener struct {
 func (ls *Listener) Listen() {
 	if ls.GetType() == typeOne {
 		reader := bufio.NewReader(os.Stdin)
-		StdPrint("How can I help?")
 		input, _ := reader.ReadString('\n')
-		ls.SetUserInput(input)
+		if Trigger(input) {
+			ls.SetUserInput(input)
+		}
 	}
+}
+
+func Trigger(s string) bool {
+	re := regexp.MustCompile(triggerTerm)
+	if re.FindString(s) != "" {
+		StdPrint("How can I help?")
+		return true
+	}
+
+	return false
 }
 
 func (ls *Listener) SetType(t string) {
