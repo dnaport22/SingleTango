@@ -10,16 +10,11 @@ type Responder struct {
 	response string
 }
 
-func (rs *Responder) Response(r []byte) (string, error) {
-	var jsonRes map[string]interface{}
+func (rs *Responder) Response(r []byte) (interface{}, error) {
+	var jsonRes map[string]map[string]interface{}
 	json.Unmarshal(r, &jsonRes)
-	res, err := json.Marshal(jsonRes)
 
-	if err != nil {
-		return "", err
-	}
-
-	return string(res), nil
+	return jsonRes["result"]["speech"], nil
 }
 
 func (rs *Responder) GetResponse() {
@@ -32,7 +27,7 @@ func (rs *Responder) SetResponse(r string) {
 	rs.response = r
 }
 
-func (rs *Responder) SetType(val string) {
-	rs.typeOf = strings.ToLower(val)
+func (rs *Responder) SetType(t string) {
+	rs.typeOf = strings.ToLower(t)
 }
 
