@@ -8,6 +8,7 @@ import (
 type Responder struct {
 	typeOf string
 	response string
+	mode string
 }
 
 func (rs *Responder) Response(r []byte) (interface{}, error) {
@@ -29,5 +30,13 @@ func (rs *Responder) SetResponse(r string) {
 
 func (rs *Responder) SetType(t string) {
 	rs.typeOf = strings.ToLower(t)
+}
+
+func (rs *Responder) SetMode(m string) {
+	rs.mode = m
+}
+
+func (rs *Responder) GetMode() string {
+	return rs.mode
 }
 

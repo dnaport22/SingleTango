@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"regexp"
+	"time"
 )
 
 const triggerTerm = "yo tango"
@@ -13,13 +14,20 @@ type Listener struct {
 	welcomeMessage string
 	typeOf string
 	userInput string
+	sessionId string
+	sessionState bool
 }
 
 func (ls *Listener) Listen() {
 	if ls.GetType() == typeOne {
 		reader := bufio.NewReader(os.Stdin)
 		input, _ := reader.ReadString('\n')
-		if Trigger(input) {
+		if !ls.IsSessionActive() {
+			if Trigger(input) {
+				ls.StartSession()
+				ls.SetUserInput(input)
+			}
+		} else {
 			ls.SetUserInput(input)
 		}
 	}
@@ -28,11 +36,24 @@ func (ls *Listener) Listen() {
 func Trigger(s string) bool {
 	re := regexp.MustCompile(triggerTerm)
 	if re.FindString(s) != "" {
-		StdPrint("How can I help?")
 		return true
 	}
 
 	return false
+}
+
+func (ls *Listener) IsSessionActive() bool {
+	return ls.sessionState
+}
+
+func (ls *Listener) StartSession() {
+	ls.sessionState = true
+	t := time.Now().Format("20060102150405")
+	ls.sessionId = t
+}
+
+func (ls *Listener) GetSessionId() string {
+	return ls.sessionId
 }
 
 func (ls *Listener) SetType(t string) {

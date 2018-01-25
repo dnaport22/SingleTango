@@ -13,17 +13,21 @@ func main() {
 	agent_input.SetType("std")
 	agent_output.SetType("std")
 
-	df.SetSessionId("1234")
+
 	df.SetLang("en")
 
 	for {
 		agent_input.Listen()
-		df.SetQuery(agent_input.GetUserInput())
-		res, _ := df.MakeRequest()
-		reply, err := agent_output.Response(res)
-		if err != nil {
+		if agent_input.IsSessionActive() {
+			df.SetSessionId(agent_input.GetSessionId())
+			df.SetQuery(agent_input.GetUserInput())
+			res, _ := df.MakeRequest()
+			reply, err := agent_output.Response(res)
+			if err != nil {
+				fmt.Println(err)
+			}
 			fmt.Println(reply)
 		}
-		fmt.Println(reply)
+
 	}
 }
