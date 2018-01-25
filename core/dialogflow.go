@@ -59,6 +59,10 @@ func (df *DialogFlow) SetQuery(q string) {
 	df.query = q
 }
 
+func (df *DialogFlow) GetQuery() string {
+	return df.query
+}
+
 func (df *DialogFlow) SetSessionId(sid string) {
 	df.sessionId = sid
 }
